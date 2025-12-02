@@ -142,6 +142,7 @@ fun UserScreenPreview_Success() {
                 UserData(2, "xyz@gmail.com", "Bhoomi", "Chhatbar", ""),
                 UserData(3, "dhruv@gmail.com", "Chandni", "Ashara", ""),
                 UserData(4, "ndfhfh@gmail.com", "Tirth", "Ashara", ""),
+                UserData(4, "ndfhfh@gmail.com", "Mital", "Ashara", ""),
             ),
             error = null
         )
