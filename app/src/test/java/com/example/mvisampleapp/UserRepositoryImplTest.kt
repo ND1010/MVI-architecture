@@ -4,14 +4,13 @@ import app.cash.turbine.test
 import com.example.mvisampleapp.data.model.UserData
 import com.example.mvisampleapp.data.model.UserResponse
 import com.example.mvisampleapp.data.remote.ApiService
-import com.example.mvisampleapp.data.remote.NetworkClient
+import com.example.mvisampleapp.di.NetworkModule
 import com.example.mvisampleapp.data.remote.Result
 import com.example.mvisampleapp.data.repository.UserRepositoryImpl
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
@@ -39,10 +38,10 @@ class UserRepositoryImplTest {
     fun setup() {
         Dispatchers.setMain(dispatcher)
         // Mock static NetworkClient.api
-        mockStatic(NetworkClient::class.java).use { staticMock ->
-            staticMock.`when`<Any> { NetworkClient.api }.thenReturn(apiService)
-            repository = UserRepositoryImpl()
-        }
+//        mockStatic(NetworkModule::class.java).use { staticMock ->
+//            staticMock.`when`<Any> { NetworkModule.api }.thenReturn(apiService)
+//            repository = UserRepositoryImpl()
+//        }
     }
 
     @After

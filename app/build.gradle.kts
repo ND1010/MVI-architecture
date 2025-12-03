@@ -2,6 +2,10 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlin.kapt)
+    alias(libs.plugins.dagger.hilt)
+
+    
 }
 
 android {
@@ -41,7 +45,9 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
-
+    hilt {
+        enableAggregatingTask = false
+    }
 }
 
 dependencies {
@@ -80,4 +86,15 @@ dependencies {
     implementation(libs.mockito.kotlin)
     implementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.turbine)
+
+    // Hilt Dagger
+    implementation(libs.hilt.android)
+    kapt(libs.dagger.hilt.compiler)
+
+}
+
+configurations.all {
+    resolutionStrategy {
+        force("com.squareup:javapoet:1.13.0")
+    }
 }

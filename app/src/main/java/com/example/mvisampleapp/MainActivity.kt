@@ -10,7 +10,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.mvisampleapp.ui.theme.MVISampleAppTheme
 import com.example.mvisampleapp.ui.userProfile.UserScreen
 import com.example.mvisampleapp.ui.userProfile.UserViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     private val userViewModel: UserViewModel by viewModels()

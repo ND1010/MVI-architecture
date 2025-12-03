@@ -1,34 +1,47 @@
-package com.example.mvisampleapp.data.remote
+package com.example.mvisampleapp.di
 
 import com.example.mvisampleapp.data.remote.ApiEndpoints.HOST_URL
+import com.example.mvisampleapp.data.remote.ApiKeyInterceptor
+import com.example.mvisampleapp.data.remote.ApiService
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
+import javax.inject.Singleton
 
 const val TIMEOUT_TIME = 30000L
+@Module
+@InstallIn(SingletonComponent::class)
+object NetworkModule {
 
-object NetworkClient {
-
-    val httpClient: OkHttpClient by lazy {
-        OkHttpClient.Builder()
+    @Provides
+    @Singleton
+    fun provideHttpClient(): OkHttpClient = OkHttpClient.Builder()
             .addInterceptor(ApiKeyInterceptor())
             .addInterceptor(provideLoggingInterceptor())
             .readTimeout(TIMEOUT_TIME, TimeUnit.SECONDS)
             .writeTimeout(TIMEOUT_TIME, TimeUnit.SECONDS)
             .callTimeout(TIMEOUT_TIME, TimeUnit.SECONDS)
             .build()
-    }
 
-    val api: ApiService by lazy {
+    @Provides
+    @Singleton
+    fun provideRetrofit(httpClient: OkHttpClient): Retrofit =
         Retrofit.Builder()
             .baseUrl(HOST_URL)
             .client(httpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-            .create(ApiService::class.java)
-    }
+
+    @Provides
+    @Singleton
+    fun provideApiService(retrofit: Retrofit): ApiService =
+        retrofit.create(ApiService::class.java)
 
     private fun provideLoggingInterceptor(): HttpLoggingInterceptor {
         return HttpLoggingInterceptor()
