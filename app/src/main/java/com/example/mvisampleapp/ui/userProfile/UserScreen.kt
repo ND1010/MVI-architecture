@@ -1,5 +1,6 @@
 package com.example.mvisampleapp.ui.userProfile
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
@@ -50,9 +52,6 @@ fun UserScreenContent(
     state: UserState,
     onRetry: () -> Unit = {}
 ) {
-    /// val state = viewModel.userState.collectAsState().value
-
-
     Scaffold { pedding ->
         Box(
             modifier = Modifier
@@ -86,8 +85,19 @@ fun UserScreenContent(
                 }
 
                 else -> {
-                    LazyColumn(modifier = Modifier.fillMaxSize()) {
-                        items(state.users) { user ->
+                    // rememberLazyListState() = Helps Compose preserve scroll position and animations when list items change.
+                    // Arrangement.spacedBy(8.dp) = Spacing / dividers between items in the list.
+                    LazyColumn(
+                        state = rememberLazyListState(),
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(
+                                start = 8.dp, end = 8.dp
+                            ),
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                    ) {
+                        // key = { it.id } = Helps Compose preserve scroll position and animations when list items change.
+                        items(state.users, key = { it.id }) { user ->
                             UserItem(user)
                         }
                     }
@@ -99,7 +109,7 @@ fun UserScreenContent(
 
 @Composable
 fun UserItem(user: UserData) {
-    Card(modifier = Modifier.padding(8.dp)) {
+    Card {
         Row(
             modifier = Modifier
                 .padding(8.dp)
