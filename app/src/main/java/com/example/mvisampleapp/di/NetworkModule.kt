@@ -15,19 +15,32 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 const val TIMEOUT_TIME = 30000L
+
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideHttpClient(): OkHttpClient = OkHttpClient.Builder()
-            .addInterceptor(ApiKeyInterceptor())
-            .addInterceptor(provideLoggingInterceptor())
-            .readTimeout(TIMEOUT_TIME, TimeUnit.SECONDS)
-            .writeTimeout(TIMEOUT_TIME, TimeUnit.SECONDS)
-            .callTimeout(TIMEOUT_TIME, TimeUnit.SECONDS)
-            .build()
+    fun provideApiKeyInterceptor(): ApiKeyInterceptor = ApiKeyInterceptor()
+
+    @Provides
+    @Singleton
+    fun provideLoggingInterceptor(): HttpLoggingInterceptor = HttpLoggingInterceptor()
+        .setLevel(HttpLoggingInterceptor.Level.BODY)
+
+    @Provides
+    @Singleton
+    fun provideHttpClient(
+        apiKeyInterceptor: ApiKeyInterceptor,
+        httpLoggingInterceptor: HttpLoggingInterceptor
+    ): OkHttpClient = OkHttpClient.Builder()
+        .addInterceptor(apiKeyInterceptor)
+        .addInterceptor(httpLoggingInterceptor)
+        .readTimeout(TIMEOUT_TIME, TimeUnit.SECONDS)
+        .writeTimeout(TIMEOUT_TIME, TimeUnit.SECONDS)
+        .callTimeout(TIMEOUT_TIME, TimeUnit.SECONDS)
+        .build()
 
     @Provides
     @Singleton
@@ -42,10 +55,5 @@ object NetworkModule {
     @Singleton
     fun provideApiService(retrofit: Retrofit): ApiService =
         retrofit.create(ApiService::class.java)
-
-    private fun provideLoggingInterceptor(): HttpLoggingInterceptor {
-        return HttpLoggingInterceptor()
-            .setLevel(HttpLoggingInterceptor.Level.BODY)
-    }
 
 }
