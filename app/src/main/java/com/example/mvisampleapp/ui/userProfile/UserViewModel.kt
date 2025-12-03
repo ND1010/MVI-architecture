@@ -17,8 +17,6 @@ class UserViewModel @Inject constructor(
     private val getUsersUseCase: GetUsersUseCase
 ) : ViewModel() {
 
-   // private val getUsersUseCase = GetUsersUseCase()
-
     private val _userState = MutableStateFlow(UserState())
     val userState : StateFlow<UserState> = _userState.asStateFlow()
 
