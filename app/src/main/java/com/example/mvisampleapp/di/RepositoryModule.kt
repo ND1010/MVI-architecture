@@ -1,6 +1,7 @@
 package com.example.mvisampleapp.di
 
 import com.example.mvisampleapp.data.remote.ApiService
+import com.example.mvisampleapp.data.remote.NetworkChecker
 import com.example.mvisampleapp.data.repository.UserRepositoryImpl
 import com.example.mvisampleapp.domain.repository.UserRepository
 import dagger.Module
@@ -15,7 +16,7 @@ object RepositoryModule {
 
     @Provides
     @Singleton
-    fun provideUserRepository(apiService: ApiService): UserRepository =
-        UserRepositoryImpl(apiService)
+    fun provideUserRepository(apiService: ApiService, networkChecker: NetworkChecker): UserRepository =
+        UserRepositoryImpl(apiService, networkChecker)
 
 }

@@ -1,11 +1,14 @@
 package com.example.mvisampleapp.di
 
+import android.content.Context
 import com.example.mvisampleapp.data.remote.ApiEndpoints.HOST_URL
 import com.example.mvisampleapp.data.remote.ApiKeyInterceptor
 import com.example.mvisampleapp.data.remote.ApiService
+import com.example.mvisampleapp.data.remote.NetworkChecker
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -55,5 +58,10 @@ object NetworkModule {
     @Singleton
     fun provideApiService(retrofit: Retrofit): ApiService =
         retrofit.create(ApiService::class.java)
+
+    @Provides
+    @Singleton
+    fun provideNetworkChecker(@ApplicationContext context: Context): NetworkChecker =
+        NetworkChecker(context)
 
 }

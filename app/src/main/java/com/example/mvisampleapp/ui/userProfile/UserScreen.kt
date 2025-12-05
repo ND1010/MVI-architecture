@@ -28,7 +28,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.example.mvisampleapp.data.model.UserData
+import com.example.mvisampleapp.data.model.UserDto
+import com.example.mvisampleapp.domain.model.User
 
 
 @Composable
@@ -108,7 +109,7 @@ fun UserScreenContent(
 }
 
 @Composable
-fun UserItem(user: UserData) {
+fun UserItem(user: User) {
     Card {
         Row(
             modifier = Modifier
@@ -124,7 +125,7 @@ fun UserItem(user: UserData) {
 
             Column {
                 Text(
-                    text = "${user.firstName} ${user.lastName}",
+                    text = user.name,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold
                 )
@@ -145,11 +146,11 @@ fun UserScreenPreview_Success() {
         state = UserState(
             isLoading = false,
             users = listOf(
-                UserData(1, "abc@gmail.com", "Dhruv", "Nirmal", ""),
-                UserData(2, "xyz@gmail.com", "Bhoomi", "Chhatbar", ""),
-                UserData(3, "dhruv@gmail.com", "Chandni", "Ashara", ""),
-                UserData(4, "ndfhfh@gmail.com", "Tirth", "Ashara", ""),
-                UserData(4, "ndfhfh@gmail.com", "Mital", "Ashara", ""),
+                User(1, "abc@gmail.com", "Dhruv Nirmal", "image_url"),
+                User(2, "xyz@gmail.com", "Bhoomi Chhatbar", "image_url"),
+                User(3, "dhruv@gmail.com", "Chandni Ashara", "image_url"),
+                User(4, "ndfhfh@gmail.com", "Tirth Ashara", "image_url"),
+                User(4, "ndfhfh@gmail.com", "Mital Ashara", "image_url"),
             ),
             error = null
         )

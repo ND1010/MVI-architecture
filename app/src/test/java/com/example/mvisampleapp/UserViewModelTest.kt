@@ -1,9 +1,8 @@
 package com.example.mvisampleapp
 
 import app.cash.turbine.test
-import com.example.mvisampleapp.data.model.UserData
-import com.example.mvisampleapp.data.model.UserResponse
 import com.example.mvisampleapp.data.remote.Result
+import com.example.mvisampleapp.domain.model.User
 import com.example.mvisampleapp.domain.usecase.GetUsersUseCase
 import com.example.mvisampleapp.ui.userProfile.UserIntent
 import com.example.mvisampleapp.ui.userProfile.UserViewModel
@@ -29,13 +28,14 @@ class UserViewModelTest {
 
     @Test
     fun `handleIntent LoadUser updates state with success`() = runTest{
-        val mockUserData = listOf(UserData(1, "test@gamil.com", "John", "Doe", "avatar_url"))
-        val mockUserResponse = UserResponse(data = mockUserData)
+        val mockUsers = listOf(
+            User(1, "abc@gmail.com", "Dhruv Nirmal", "image_url"),
+        )
 
         whenever(getUsersUseCase()).thenReturn(
             flow {
                 emit(Result.Loading)
-                emit(Result.Success(mockUserResponse))
+                emit(Result.Success(mockUsers))
             }
         )
 
@@ -55,11 +55,10 @@ class UserViewModelTest {
 
             // skipItems(2)
 
-            // Third emission: success state
             val successState = awaitItem()
             assert(!successState.isLoading)
             assert(successState.users.size == 1)
-            assert(successState.users[0].firstName == "John")
+            assert(successState.users[0].name == "Dhruv Nirmal")
             assert(successState.error == null)
 
             cancelAndIgnoreRemainingEvents()
@@ -68,13 +67,14 @@ class UserViewModelTest {
 
     @Test
     fun `handleIntent Refresh updates state with success`() = runTest{
-        val mockUserData = listOf(UserData(1, "test@gamil.com", "John", "Doe", "avatar_url"))
-        val mockUserResponse = UserResponse(data = mockUserData)
+        val mockUsers = listOf(
+            User(1, "abc@gmail.com", "Dhruv Nirmal", "image_url"),
+        )
 
         whenever(getUsersUseCase()).thenReturn(
             flow {
                 emit(Result.Loading)
-                emit(Result.Success(mockUserResponse))
+                emit(Result.Success(mockUsers))
             }
         )
 
@@ -86,7 +86,7 @@ class UserViewModelTest {
             val successState = awaitItem()
             assert(!successState.isLoading)
             assert(successState.users.size == 1)
-            assert(successState.users[0].firstName == "John")
+            assert(successState.users[0].name == "Dhruv Nirmal")
             assert(successState.error == null)
 
             cancelAndIgnoreRemainingEvents()

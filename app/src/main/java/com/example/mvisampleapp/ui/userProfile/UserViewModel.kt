@@ -36,7 +36,7 @@ class UserViewModel @Inject constructor(
                     _userState.update { it.copy(isLoading = true, error = null) }
                 }
                 is Result.Success -> {
-                    _userState.update { it.copy(isLoading = false, users = result.data.data) }
+                    _userState.update { it.copy(isLoading = false, users = result.data) }
                 }
                 is  Result.Error -> {
                     _userState.update { it.copy(isLoading = false, error = result.message) }
