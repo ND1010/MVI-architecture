@@ -116,8 +116,6 @@ class UserViewModelTest {
             assert(errorState.error == "Something went wrong")
 
             cancelAndIgnoreRemainingEvents()
-
         }
     }
-
 }

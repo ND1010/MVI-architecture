@@ -53,14 +53,14 @@ class UserRepositoryImplTest {
 
     @Test
     fun `getUser emits Error then Api Throw Exception`() = runTest {
-        whenever(apiService.getUser()).thenThrow(RuntimeException("Network error"))
+        whenever(apiService.getUser()).thenThrow(RuntimeException("Api error"))
         whenever(networkChecker.isNetworkAvailable()).thenReturn(true)
 
         val results =  repository.getUser().toList()
 
         assert(results[0] is Result.Loading)
         assert(results[1] is Result.Error)
-        assertEquals("Network error", (results[1] as Result.Error).message)
+        assertEquals("Api error", (results[1] as Result.Error).message)
     }
 
     @Test

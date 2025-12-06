@@ -1,5 +1,6 @@
 package com.example.mvisampleapp.ui.userProfile
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,6 +16,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -23,12 +25,12 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.example.mvisampleapp.data.model.UserDto
 import com.example.mvisampleapp.domain.model.User
 
 
@@ -56,14 +58,15 @@ fun UserScreenContent(
     Scaffold { pedding ->
         Box(
             modifier = Modifier
-                .padding(pedding)
                 .fillMaxSize()
+                .padding(pedding)
         ) {
 
             when {
                 state.isLoading -> {
                     CircularProgressIndicator(
-                        modifier = Modifier.align(Alignment.Center)
+                        modifier = Modifier.align(Alignment.Center),
+                        strokeWidth = 4.dp,
                     )
                 }
 
@@ -73,7 +76,7 @@ fun UserScreenContent(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
-                            text = "Error: ${state.error}",
+                            text = state.error,
                             modifier = Modifier
                                 .padding(16.dp)
                                 .align(Alignment.CenterHorizontally)
@@ -97,7 +100,7 @@ fun UserScreenContent(
                             ),
                         verticalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
-                        // key = { it.id } = Helps Compose preserve scroll position and animations when list items change.
+                        // key = { it.id } = You are telling Jetpack Compose Use user.id as the unique key for each item in the list.
                         items(state.users, key = { it.id }) { user ->
                             UserItem(user)
                         }
@@ -110,17 +113,30 @@ fun UserScreenContent(
 
 @Composable
 fun UserItem(user: User) {
-    Card {
+    val context = LocalContext.current
+
+    Card(
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 6.dp
+        ),
+        onClick = {
+            Toast.makeText(
+                context, user.name, Toast.LENGTH_LONG
+            ).show()
+        }
+    ) {
         Row(
             modifier = Modifier
                 .padding(8.dp)
-                .fillMaxSize()
+                .fillMaxSize(),
+            verticalAlignment = Alignment.CenterVertically
         ) {
             AsyncImage(
                 model = user.avatar,
-                contentDescription = null,
-                Modifier.size(52.dp)
+                contentDescription = user.name,
+                Modifier.size(52.dp),
             )
+
             Spacer(modifier = Modifier.width(12.dp))
 
             Column {

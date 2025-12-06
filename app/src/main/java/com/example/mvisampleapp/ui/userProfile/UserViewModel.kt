@@ -18,31 +18,32 @@ class UserViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _userState = MutableStateFlow(UserState())
-    val userState : StateFlow<UserState> = _userState.asStateFlow()
+    val userState: StateFlow<UserState> = _userState.asStateFlow()
 
-    fun handleIntent(intent: UserIntent){
+    fun handleIntent(intent: UserIntent) {
         viewModelScope.launch {
-            when(intent){
+            when (intent) {
                 is UserIntent.LoadUser -> fetchUserProfile()
-                is UserIntent.Refresh -> { fetchUserProfile() }
+                is UserIntent.Refresh -> fetchUserProfile()
             }
         }
     }
 
-    private suspend fun fetchUserProfile(){
+    private suspend fun fetchUserProfile() {
         getUsersUseCase().collect { result ->
-            when(result){
+            when (result) {
                 is Result.Loading -> {
                     _userState.update { it.copy(isLoading = true, error = null) }
                 }
+
                 is Result.Success -> {
                     _userState.update { it.copy(isLoading = false, users = result.data) }
                 }
-                is  Result.Error -> {
+
+                is Result.Error -> {
                     _userState.update { it.copy(isLoading = false, error = result.message) }
                 }
             }
         }
     }
-
 }
